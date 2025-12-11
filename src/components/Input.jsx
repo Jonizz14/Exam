@@ -1,5 +1,6 @@
 import React from 'react';
 import { clsx } from 'clsx';
+import './Input.css';
 
 const Input = ({ 
   label, 
@@ -11,30 +12,25 @@ const Input = ({
   ...props 
 }) => {
   return (
-    <div className="w-full">
+    <div className="input-group">
       {label && (
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label className="input-label">
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+          {required && <span className="input-required">*</span>}
         </label>
       )}
       <input
         type={type}
         placeholder={placeholder}
         className={clsx(
-          'w-full px-4 py-3 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-          'bg-white dark:bg-gray-700',
-          'text-gray-900 dark:text-gray-100',
-          'border-gray-300 dark:border-gray-600',
-          'placeholder-gray-500 dark:placeholder-gray-400',
-          'hover:border-gray-400 dark:hover:border-gray-500',
-          error && 'border-red-500 focus:ring-red-500',
+          'input-field',
+          error && 'input-error',
           className
         )}
         {...props}
       />
       {error && (
-        <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+        <p className="input-error-text">
           {error}
         </p>
       )}

@@ -5,6 +5,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import './Signup.css';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -97,45 +98,33 @@ const Signup = () => {
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center px-4 py-12 transition-colors duration-300 ${
-      isDark 
-        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
-        : 'bg-gradient-to-br from-purple-50 via-pink-50 to-red-50'
-    }`}>
-      <div className="max-w-md w-full space-y-8">
-        <div className={`p-8 rounded-2xl shadow-2xl backdrop-blur-lg ${
-          isDark 
-            ? 'bg-gray-800/80 border border-gray-700' 
-            : 'bg-white/80 border border-gray-200'
-        }`}>
+    <div className={`signup-page ${isDark ? 'signup-dark' : 'signup-light'}`}>
+      <div className="signup-card-wrapper">
+        <div className="signup-card">
           {/* Header */}
           <div className="text-center">
-            <div className="mx-auto h-16 w-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mb-6">
-              <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="signup-logo">
+              <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
               </svg>
             </div>
-            <h2 className={`text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+            <h2 className="signup-title">
               {t('signupTitle')}
             </h2>
-            <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            <p className="signup-subtitle">
               Create your account
             </p>
           </div>
 
           {/* Form */}
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <form className="signup-form" onSubmit={handleSubmit}>
             {errors.general && (
-              <div className={`p-4 rounded-lg border ${
-                isDark 
-                  ? 'bg-red-900/50 border-red-700 text-red-200' 
-                  : 'bg-red-50 border-red-200 text-red-700'
-              }`}>
+              <div className="signup-error">
                 {errors.general}
               </div>
             )}
 
-            <div className="space-y-4">
+            <div className="signup-fields">
               <Input
                 label={t('name')}
                 type="text"
@@ -185,18 +174,18 @@ const Signup = () => {
               type="submit"
               variant="primary"
               size="lg"
-              className="w-full"
+              className="signup-submit"
               loading={isLoading}
             >
               {t('signup')}
             </Button>
 
-            <div className="text-center">
-              <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+            <div className="signup-footer">
+              <p>
                 {t('alreadyHaveAccount')}{' '}
                 <Link
                   to="/login"
-                  className="font-medium text-blue-600 hover:text-blue-500"
+                  className="signup-link"
                 >
                   {t('login')}
                 </Link>

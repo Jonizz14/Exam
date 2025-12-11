@@ -10,139 +10,149 @@ export const useAuth = () => {
   return context;
 };
 
+const USERS_KEY = 'auth_users';
+const SESSION_KEY = 'auth_session';
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
+    seedDefaultUser();
     checkAuthStatus();
   }, []);
 
-  const checkAuthStatus = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const response = await fetch('http://localhost:5000/api/auth/check', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        const data = await response.json();
-        
-        if (data.success && data.isAuthenticated) {
-          setUser(data.user);
-          setIsAuthenticated(true);
-        } else {
-          localStorage.removeItem('token');
+  const seedDefaultUser = () => {
+    const stored = localStorage.getItem(USERS_KEY);
+    if (!stored) {
+      const defaultUsers = [
+        {
+          name: 'Demo User',
+          email: 'admin@example.com',
+          password: '123456'
         }
+      ];
+      localStorage.setItem(USERS_KEY, JSON.stringify(defaultUsers));
+    }
+  };
+
+  const loadUsers = () => {
+    const raw = localStorage.getItem(USERS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  };
+
+  const saveUsers = (users) => {
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  };
+
+  const saveSession = (email) => {
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ email }));
+  };
+
+  const clearSession = () => {
+    localStorage.removeItem(SESSION_KEY);
+  };
+
+  const checkAuthStatus = () => {
+    const sessionRaw = localStorage.getItem(SESSION_KEY);
+    if (!sessionRaw) {
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const session = JSON.parse(sessionRaw);
+      const users = loadUsers();
+      const found = users.find((u) => u.email === session.email);
+      if (found) {
+        setUser(found);
+        setIsAuthenticated(true);
+      } else {
+        clearSession();
       }
-    } catch (error) {
-      console.error('Auth check failed:', error);
-      localStorage.removeItem('token');
+    } catch {
+      clearSession();
     } finally {
       setIsLoading(false);
     }
   };
 
   const login = async (email, password) => {
-    try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        localStorage.setItem('token', data.data.token);
-        setUser(data.data.user);
-        setIsAuthenticated(true);
-        return { success: true };
-      } else {
-        return { success: false, message: data.message };
-      }
-    } catch (error) {
-      return { success: false, message: 'Network error occurred' };
+    const users = loadUsers();
+    const found = users.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+    );
+    if (!found) {
+      return { success: false, message: 'Invalid credentials' };
     }
+    saveSession(found.email);
+    setUser(found);
+    setIsAuthenticated(true);
+    return { success: true };
   };
 
   const register = async (name, email, password) => {
-    try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name, email, password })
-      });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        localStorage.setItem('token', data.data.token);
-        setUser(data.data.user);
-        setIsAuthenticated(true);
-        return { success: true };
-      } else {
-        return { success: false, message: data.message };
-      }
-    } catch (error) {
-      return { success: false, message: 'Network error occurred' };
+    const users = loadUsers();
+    const exists = users.some((u) => u.email.toLowerCase() === email.toLowerCase());
+    if (exists) {
+      return { success: false, message: 'User already exists' };
     }
+    const newUser = { name, email, password };
+    const updated = [...users, newUser];
+    saveUsers(updated);
+    saveSession(email);
+    setUser(newUser);
+    setIsAuthenticated(true);
+    return { success: true };
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    clearSession();
     setUser(null);
     setIsAuthenticated(false);
   };
 
   const updateProfile = async (profileData) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/users/profile', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(profileData)
-      });
+    const users = loadUsers();
+    const sessionRaw = localStorage.getItem(SESSION_KEY);
+    if (!sessionRaw) return { success: false, message: 'Not authenticated' };
+    const session = JSON.parse(sessionRaw);
+    const idx = users.findIndex((u) => u.email === session.email);
+    if (idx === -1) return { success: false, message: 'User not found' };
 
-      const data = await response.json();
-      
-      if (data.success) {
-        setUser(data.data.user);
-        return { success: true };
-      } else {
-        return { success: false, message: data.message };
-      }
-    } catch (error) {
-      return { success: false, message: 'Network error occurred' };
+    // Check email uniqueness if it changed
+    if (
+      profileData.email &&
+      profileData.email.toLowerCase() !== session.email.toLowerCase() &&
+      users.some((u) => u.email.toLowerCase() === profileData.email.toLowerCase())
+    ) {
+      return { success: false, message: 'Email already in use' };
     }
+
+    const updatedUser = {
+      ...users[idx],
+      ...profileData
+    };
+    users[idx] = updatedUser;
+    saveUsers(users);
+    saveSession(updatedUser.email);
+    setUser(updatedUser);
+    return { success: true };
   };
 
   const changePassword = async (currentPassword, newPassword) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/users/password', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ currentPassword, newPassword })
-      });
-
-      const data = await response.json();
-      return { success: data.success, message: data.message };
-    } catch (error) {
-      return { success: false, message: 'Network error occurred' };
+    const users = loadUsers();
+    const sessionRaw = localStorage.getItem(SESSION_KEY);
+    if (!sessionRaw) return { success: false, message: 'Not authenticated' };
+    const session = JSON.parse(sessionRaw);
+    const idx = users.findIndex((u) => u.email === session.email);
+    if (idx === -1) return { success: false, message: 'User not found' };
+    if (users[idx].password !== currentPassword) {
+      return { success: false, message: 'Current password is incorrect' };
     }
+    users[idx].password = newPassword;
+    saveUsers(users);
+    return { success: true, message: 'Password updated' };
   };
 
   const value = {

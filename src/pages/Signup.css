@@ -1,0 +1,113 @@
+/* Signup page */
+.signup-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.signup-light {
+  background: linear-gradient(135deg, #f5f3ff, #ffe4e6, #fef2f2);
+  color: var(--text-primary);
+}
+
+.signup-dark {
+  background: linear-gradient(135deg, #0f172a, #111827, #0b1224);
+  color: #e5e7eb;
+}
+
+.signup-card-wrapper {
+  width: 100%;
+  max-width: 480px;
+}
+
+.signup-card {
+  padding: 32px;
+  border-radius: 18px;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 25px 35px -25px var(--shadow-color);
+}
+
+.signup-light .signup-card {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.signup-dark .signup-card {
+  background: rgba(45, 45, 45, 0.8);
+  border-color: #404040;
+}
+
+.signup-logo {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 18px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  color: white;
+}
+
+.signup-title {
+  font-size: clamp(26px, 4vw, 32px);
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.signup-subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.signup-form {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.signup-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.signup-submit {
+  width: 100%;
+}
+
+.signup-error {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.signup-dark .signup-error {
+  border-color: #7f1d1d;
+  background: rgba(127, 29, 29, 0.25);
+  color: #fecdd3;
+}
+
+.signup-footer {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.signup-link {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.signup-link:hover {
+  color: #1d4ed8;
+}

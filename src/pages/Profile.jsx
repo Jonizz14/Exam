@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
 import Button from '../components/Button';
+import './Profile.css';
 
 const Profile = () => {
   const { user, logout } = useAuth();
@@ -49,11 +50,11 @@ const Profile = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'Due Soon':
-        return isDark ? 'bg-yellow-900/50 text-yellow-400 border-yellow-700' : 'bg-yellow-50 text-yellow-700 border-yellow-200';
+        return 'status-badge status-warning';
       case 'On Time':
-        return isDark ? 'bg-green-900/50 text-green-400 border-green-700' : 'bg-green-50 text-green-700 border-green-200';
+        return 'status-badge status-success';
       default:
-        return isDark ? 'bg-gray-900/50 text-gray-400 border-gray-700' : 'bg-gray-50 text-gray-700 border-gray-200';
+        return 'status-badge status-neutral';
     }
   };
 
@@ -69,7 +70,7 @@ const Profile = () => {
     return Array.from({ length: 5 }, (_, index) => (
       <span
         key={index}
-        className={`text-sm ${index < rating ? 'text-yellow-400' : isDark ? 'text-gray-600' : 'text-gray-300'}`}
+        className={`star ${index < rating ? 'active' : ''}`}
       >
         ★
       </span>
@@ -77,177 +78,125 @@ const Profile = () => {
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${
-      isDark 
-        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
-        : 'bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50'
-    }`}>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+    <div className={`profile-page ${isDark ? 'profile-dark' : 'profile-light'}`}>
+      <div className="profile-container">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="mx-auto h-24 w-24 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mb-6">
-            <span className="text-3xl text-white font-bold">
+        <div className="profile-header">
+          <div className="profile-avatar">
               {user?.name?.charAt(0).toUpperCase()}
-            </span>
-          </div>
-          <h1 className={`text-4xl font-bold mb-2 ${
-            isDark ? 'text-white' : 'text-gray-900'
-          }`}>
+            </div>
+          <h1 className="profile-title">
             {t('welcome')}, {user?.name}!
           </h1>
-          <p className={`text-lg ${
-            isDark ? 'text-gray-400' : 'text-gray-600'
-          }`}>
+          <p className="profile-subtitle">
             Manage your library account and reading activity
           </p>
         </div>
 
         {/* Profile Actions */}
-        <div className="flex justify-center mb-12">
-          <div className="flex space-x-4">
-            <Link to="/profile/edit">
-              <Button variant="primary" size="lg">
-                {t('edit')} Profile
-              </Button>
-            </Link>
-          </div>
+        <div className="profile-actions">
+          <Link to="/profile/edit">
+            <Button variant="primary" size="lg">
+              {t('edit')} Profile
+            </Button>
+          </Link>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="profile-grid">
           {/* Profile Information */}
-          <div className={`p-8 rounded-2xl backdrop-blur-lg border ${
-            isDark 
-              ? 'bg-gray-800/50 border-gray-700' 
-              : 'bg-white/70 border-gray-200'
-          }`}>
-            <h2 className={`text-2xl font-bold mb-6 ${
-              isDark ? 'text-white' : 'text-gray-900'
-            }`}>
+          <div className="profile-card">
+            <h2 className="profile-card-title">
               {t('profileInfo')}
             </h2>
             
-            <div className="space-y-4">
+            <div className="profile-info">
               <div>
-                <label className={`text-sm font-medium ${
-                  isDark ? 'text-gray-400' : 'text-gray-600'
-                }`}>
+                <label className="profile-label">
                   Name
                 </label>
-                <p className={`text-lg ${
-                  isDark ? 'text-white' : 'text-gray-900'
-                }`}>
+                <p className="profile-text">
                   {user?.name}
                 </p>
               </div>
               
               <div>
-                <label className={`text-sm font-medium ${
-                  isDark ? 'text-gray-400' : 'text-gray-600'
-                }`}>
+                <label className="profile-label">
                   Email
                 </label>
-                <p className={`text-lg ${
-                  isDark ? 'text-white' : 'text-gray-900'
-                }`}>
+                <p className="profile-text">
                   {user?.email}
                 </p>
               </div>
               
               <div>
-                <label className={`text-sm font-medium ${
-                  isDark ? 'text-gray-400' : 'text-gray-600'
-                }`}>
+                <label className="profile-label">
                   Member Since
                 </label>
-                <p className={`text-lg ${
-                  isDark ? 'text-white' : 'text-gray-900'
-                }`}>
+                <p className="profile-text">
                   {formatDate(user?.createdAt || '2024-01-01')}
                 </p>
               </div>
               
               <div>
-                <label className={`text-sm font-medium ${
-                  isDark ? 'text-gray-400' : 'text-gray-600'
-                }`}>
+                <label className="profile-label">
                   Account Type
                 </label>
-                <p className={`text-lg ${
-                  isDark ? 'text-white' : 'text-gray-900'
-                }`}>
+                <p className="profile-text">
                   Standard Member
                 </p>
               </div>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-600">
-              <h3 className={`font-semibold mb-4 ${
-                isDark ? 'text-white' : 'text-gray-900'
-              }`}>
+            <div className="profile-section">
+              <h3 className="profile-card-title" style={{ fontSize: '18px', marginBottom: '10px' }}>
                 Account Statistics
               </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className={isDark ? 'text-gray-300' : 'text-gray-600'}>Books Borrowed</span>
-                  <span className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>12</span>
+              <div className="profile-stats">
+                <div className="profile-stat-row">
+                  <span>Books Borrowed</span>
+                  <span className="profile-stat-value">12</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className={isDark ? 'text-gray-300' : 'text-gray-600'}>Currently Borrowed</span>
-                  <span className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>2</span>
+                <div className="profile-stat-row">
+                  <span>Currently Borrowed</span>
+                  <span className="profile-stat-value">2</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className={isDark ? 'text-gray-300' : 'text-gray-600'}>Books Read</span>
-                  <span className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>34</span>
+                <div className="profile-stat-row">
+                  <span>Books Read</span>
+                  <span className="profile-stat-value">34</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className={isDark ? 'text-gray-300' : 'text-gray-600'}>Average Rating</span>
-                  <span className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>4.2★</span>
+                <div className="profile-stat-row">
+                  <span>Average Rating</span>
+                  <span className="profile-stat-value">4.2★</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Currently Borrowed */}
-          <div className={`p-8 rounded-2xl backdrop-blur-lg border ${
-            isDark 
-              ? 'bg-gray-800/50 border-gray-700' 
-              : 'bg-white/70 border-gray-200'
-          }`}>
-            <h2 className={`text-2xl font-bold mb-6 ${
-              isDark ? 'text-white' : 'text-gray-900'
-            }`}>
+          <div className="profile-card">
+            <h2 className="profile-card-title">
               Currently Borrowed
             </h2>
             
             {borrowedBooks.length > 0 ? (
-              <div className="space-y-4">
+              <div className="book-list">
                 {borrowedBooks.map((book) => (
-                  <div key={book.id} className={`p-4 rounded-xl border ${
-                    isDark 
-                      ? 'bg-gray-700/50 border-gray-600' 
-                      : 'bg-white/50 border-gray-200'
-                  }`}>
-                    <div className="flex justify-between items-start mb-2">
+                  <div key={book.id} className="book-card">
+                    <div className="book-top" style={{ display: 'flex', justifyContent: 'space-between', gap: '8px', marginBottom: '8px' }}>
                       <div>
-                        <h3 className={`font-semibold ${
-                          isDark ? 'text-white' : 'text-gray-900'
-                        }`}>
+                        <h3 className="book-title">
                           {book.title}
                         </h3>
-                        <p className={`text-sm ${
-                          isDark ? 'text-gray-400' : 'text-gray-600'
-                        }`}>
+                        <p className="book-meta">
                           by {book.author}
                         </p>
                       </div>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(book.status)}`}>
+                      <span className={getStatusColor(book.status)}>
                         {book.status}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className={`text-sm ${
-                        isDark ? 'text-gray-400' : 'text-gray-600'
-                      }`}>
+                    <div className="book-footer">
+                      <span>
                         Due: {formatDate(book.dueDate)}
                       </span>
                       <Button variant="outline" size="sm">
@@ -258,11 +207,11 @@ const Profile = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8">
-                <div className={`text-4xl mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`}>
+              <div className="profile-empty">
+                <div style={{ fontSize: '32px', marginBottom: '10px' }}>
                   📚
                 </div>
-                <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p>
                   No books currently borrowed
                 </p>
               </div>
@@ -270,42 +219,26 @@ const Profile = () => {
           </div>
 
           {/* Reading History */}
-          <div className={`p-8 rounded-2xl backdrop-blur-lg border ${
-            isDark 
-              ? 'bg-gray-800/50 border-gray-700' 
-              : 'bg-white/70 border-gray-200'
-          }`}>
-            <h2 className={`text-2xl font-bold mb-6 ${
-              isDark ? 'text-white' : 'text-gray-900'
-            }`}>
+          <div className="profile-card">
+            <h2 className="profile-card-title">
               Reading History
             </h2>
             
             {readingHistory.length > 0 ? (
-              <div className="space-y-4">
+              <div className="book-list">
                 {readingHistory.map((book) => (
-                  <div key={book.id} className={`p-4 rounded-xl border ${
-                    isDark 
-                      ? 'bg-gray-700/50 border-gray-600' 
-                      : 'bg-white/50 border-gray-200'
-                  }`}>
-                    <h3 className={`font-semibold mb-1 ${
-                      isDark ? 'text-white' : 'text-gray-900'
-                    }`}>
+                  <div key={book.id} className="book-card">
+                    <h3 className="book-title">
                       {book.title}
                     </h3>
-                    <p className={`text-sm mb-2 ${
-                      isDark ? 'text-gray-400' : 'text-gray-600'
-                    }`}>
+                    <p className="book-meta">
                       by {book.author}
                     </p>
-                    <div className="flex justify-between items-center">
-                      <span className={`text-sm ${
-                        isDark ? 'text-gray-400' : 'text-gray-600'
-                      }`}>
+                    <div className="book-footer">
+                      <span>
                         Returned: {formatDate(book.returnedDate)}
                       </span>
-                      <div className="flex">
+                      <div className="stars">
                         {renderStars(book.rating)}
                       </div>
                     </div>
@@ -313,11 +246,11 @@ const Profile = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8">
-                <div className={`text-4xl mb-4 ${isDark ? 'text-gray-600' : 'text-gray-300'}`}>
+              <div className="profile-empty">
+                <div style={{ fontSize: '32px', marginBottom: '10px' }}>
                   📖
                 </div>
-                <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p>
                   No reading history yet
                 </p>
               </div>
@@ -326,15 +259,9 @@ const Profile = () => {
         </div>
 
         {/* Logout Section */}
-        <div className="mt-16 text-center">
-          <div className={`inline-block p-6 rounded-2xl backdrop-blur-lg border ${
-            isDark 
-              ? 'bg-red-900/20 border-red-700' 
-              : 'bg-red-50 border-red-200'
-          }`}>
-            <h3 className={`text-lg font-semibold mb-4 ${
-              isDark ? 'text-red-400' : 'text-red-700'
-            }`}>
+        <div style={{ marginTop: '48px', textAlign: 'center' }}>
+          <div className="logout-card">
+            <h3 className="logout-title">
               Account Actions
             </h3>
             <Button

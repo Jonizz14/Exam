@@ -1,0 +1,257 @@
+/* Profile page */
+.profile-page {
+  min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.profile-light {
+  background: linear-gradient(135deg, #ffe4e6, #f5f3ff, #e0f2fe);
+  color: var(--text-primary);
+}
+
+.profile-dark {
+  background: linear-gradient(135deg, #0f172a, #111827, #0b1224);
+  color: #e5e7eb;
+}
+
+.profile-container {
+  width: 100%;
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 80px 24px 64px;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.profile-avatar {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 18px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #a855f7, #ec4899);
+  color: white;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.profile-title {
+  font-size: clamp(32px, 5vw, 42px);
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.profile-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 1024px) {
+  .profile-grid {
+    grid-template-columns: 1.2fr 0.8fr 1fr;
+  }
+}
+
+.profile-card {
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 18px 28px -24px var(--shadow-color);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.profile-dark .profile-card {
+  background: rgba(45, 45, 45, 0.82);
+  border-color: #404040;
+}
+
+.profile-card-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.profile-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.profile-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.profile-text {
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.profile-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.profile-stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.profile-stat-value {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.status-warning {
+  background: #fef9c3;
+  color: #854d0e;
+  border-color: #facc15;
+}
+
+.status-success {
+  background: #ecfdf3;
+  color: #166534;
+  border-color: #22c55e;
+}
+
+.status-neutral {
+  background: #f1f5f9;
+  color: #475569;
+  border-color: #cbd5e1;
+}
+
+.profile-dark .status-warning {
+  background: rgba(202, 138, 4, 0.2);
+  color: #facc15;
+  border-color: #facc15;
+}
+
+.profile-dark .status-success {
+  background: rgba(22, 101, 52, 0.25);
+  color: #86efac;
+  border-color: #16a34a;
+}
+
+.profile-dark .status-neutral {
+  background: rgba(75, 85, 99, 0.25);
+  color: #e2e8f0;
+  border-color: #4b5563;
+}
+
+.book-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.book-card {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+}
+
+.profile-dark .book-card {
+  background: rgba(45, 45, 45, 0.9);
+  border-color: #404040;
+}
+
+.book-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.book-meta {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.book-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.star {
+  font-size: 14px;
+  color: var(--text-tertiary);
+}
+
+.star.active {
+  color: #fbbf24;
+}
+
+.profile-empty {
+  text-align: center;
+  padding: 24px 0;
+  color: var(--text-secondary);
+}
+
+.logout-card {
+  display: inline-block;
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid #fecdd3;
+  background: #fff1f2;
+  text-align: center;
+}
+
+.profile-dark .logout-card {
+  background: rgba(127, 29, 29, 0.2);
+  border-color: #7f1d1d;
+}
+
+.logout-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #b91c1c;
+}
+
+.profile-dark .logout-title {
+  color: #fecdd3;
+}
